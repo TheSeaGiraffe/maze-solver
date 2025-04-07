@@ -6,14 +6,13 @@ def main():
     win = Window(800, 800)
 
     # Draw squares or cells using the new Cell class
-    sq_small = Cell(200, 200, 300, 300, win)
-    sq_small.draw()
+    src_cell = Cell(200, 300, 300, 400, win)
+    src_cell.draw()
+    target_cell = Cell(500, 300, 600, 400, win)
+    target_cell.draw()
 
-    sq_long_horz = Cell(300, 500, 500, 300, win)
-    # sq_long_horz.has_left_wall = False
-    sq_long_horz.has_top_wall = False
-    sq_long_horz.has_bottom_wall = False
-    sq_long_horz.draw()
+    # Draw line between center of src and target cells
+    src_cell.draw_move(target_cell)
 
     win.wait_for_close()
 
