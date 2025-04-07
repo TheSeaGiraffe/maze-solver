@@ -4,15 +4,15 @@ from window import Window
 
 
 class Cell:
-    def __init__(self, x1: int, y1: int, x2: int, y2: int, win: Window):
+    def __init__(self, win: Window):
         # Window
         self._win: Window = win
 
         # Coords
-        self._x1: int = x1
-        self._y1: int = y1
-        self._x2: int = x2
-        self._y2: int = y2
+        self._x1: int = 0
+        self._y1: int = 0
+        self._x2: int = 0
+        self._y2: int = 0
 
         # Wall check
         self.has_left_wall: bool = True
@@ -20,7 +20,13 @@ class Cell:
         self.has_top_wall: bool = True
         self.has_bottom_wall: bool = True
 
-    def draw(self):
+    def draw(self, x1: int, y1: int, x2: int, y2: int):
+        # Set coords
+        self._x1 = x1
+        self._y1 = y1
+        self._x2 = x2
+        self._y2 = y2
+
         # Create all necessary points
         pt_lower_left = Point(self._x1, self._y1)
         pt_lower_right = Point(self._x2, self._y1)
