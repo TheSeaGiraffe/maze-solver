@@ -4,9 +4,9 @@ from window import Window
 
 
 class Cell:
-    def __init__(self, win: Window):
+    def __init__(self, win: Window | None = None):
         # Window
-        self._win: Window = win
+        self._win: Window | None = win
 
         # Coords
         self._x1: int = 0
@@ -35,18 +35,19 @@ class Cell:
 
         # Draw lines
         # Wonder if I can do all of this in a loop. Will think about it later
-        if self.has_left_wall:
-            line_left = Line(pt_lower_left, pt_upper_left)
-            self._win.draw_line(line_left, "black")
-        if self.has_right_wall:
-            line_right = Line(pt_lower_right, pt_upper_right)
-            self._win.draw_line(line_right, "black")
-        if self.has_top_wall:
-            line_top = Line(pt_upper_left, pt_upper_right)
-            self._win.draw_line(line_top, "black")
-        if self.has_bottom_wall:
-            line_bottom = Line(pt_lower_left, pt_lower_right)
-            self._win.draw_line(line_bottom, "black")
+        if self._win is not None:
+            if self.has_left_wall:
+                line_left = Line(pt_lower_left, pt_upper_left)
+                self._win.draw_line(line_left, "black")
+            if self.has_right_wall:
+                line_right = Line(pt_lower_right, pt_upper_right)
+                self._win.draw_line(line_right, "black")
+            if self.has_top_wall:
+                line_top = Line(pt_upper_left, pt_upper_right)
+                self._win.draw_line(line_top, "black")
+            if self.has_bottom_wall:
+                line_bottom = Line(pt_lower_left, pt_lower_right)
+                self._win.draw_line(line_bottom, "black")
 
     def draw_move(self, to_cell: "Cell", undo: bool = False):
         # Get center of both cells
