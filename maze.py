@@ -37,7 +37,14 @@ class Maze:
         # Draw each cell
         for row in range(self._num_rows):
             for col in range(self._num_cols):
+                self._break_entrance_and_exit(row, col)
                 self._draw_cell(row, col)
+
+    def _break_entrance_and_exit(self, i: int, j: int):
+        if (i == 0) and (j == 0):
+            self._cells[i][j].has_bottom_wall = False
+        elif (i == (self._num_rows - 1)) and (j == (self._num_cols - 1)):
+            self._cells[i][j].has_top_wall = False
 
     def _draw_cell(self, i: int, j: int):
         # Remember, (x1, y1) is lower left corner and (x2, y2) is upper right
