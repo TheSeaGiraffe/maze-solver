@@ -5,8 +5,9 @@ from window import Window
 def main():
     win = Window(800, 800)
 
-    # Init a maze
-    maze = Maze(100, 100, 15, 15, 20, 20, win)
+    # Init a maze with a seed for testing purposes
+    seed = 42
+    maze = Maze(50, 50, 10, 10, 20, 20, win, seed)
 
     win.wait_for_close()
 

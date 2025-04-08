@@ -1,3 +1,4 @@
+import random
 import time
 
 from cell import Cell
@@ -14,6 +15,7 @@ class Maze:
         cell_size_x: int,
         cell_size_y: int,
         win: Window | None = None,
+        seed: int | None = None,
     ):
         self._x1: int = x1
         self._y1: int = y1
@@ -24,7 +26,11 @@ class Maze:
         self._win: Window | None = win
         self._cells: list[list[Cell]] = []
 
+        if seed is not None:
+            random.seed(seed)
+
         self._create_cells()
+        self._break_walls_r(0, 0)
 
     def _create_cells(self):
         # Populate _cells list
@@ -42,9 +48,9 @@ class Maze:
 
     def _break_entrance_and_exit(self, i: int, j: int):
         if (i == 0) and (j == 0):
-            self._cells[i][j].has_bottom_wall = False
-        elif (i == (self._num_rows - 1)) and (j == (self._num_cols - 1)):
             self._cells[i][j].has_top_wall = False
+        elif (i == (self._num_rows - 1)) and (j == (self._num_cols - 1)):
+            self._cells[i][j].has_bottom_wall = False
 
     def _draw_cell(self, i: int, j: int):
         # Remember, (x1, y1) is lower left corner and (x2, y2) is upper right
@@ -59,3 +65,59 @@ class Maze:
         if self._win is not None:
             self._win.redraw()
             time.sleep(0.05)
+
+    def _break_walls_r(self, i: int, j: int):
+        self._cells[i][j].visited = True
+        while True:
+            # Create empty list to keep track of all the coords that we'll need to visit
+            cell_coords_to_visit: list[tuple[str, int, int]] = []
+
+            # Check adjacent cells
+            adj_coords = [
+                ("right", i, j + 1),
+                ("bottom", i + 1, j),
+                ("left", i, j - 1),
+                ("top", i - 1, j),
+            ]
+
+            for direction, i_adj, j_adj in adj_coords:
+                if (
+                    i_adj < 0
+                    or j_adj < 0
+                    or i_adj > (self._num_rows - 1)
+                    or j_adj > (self._num_cols - 1)
+                ):
+                    continue
+                if not self._cells[i_adj][j_adj].visited:
+                    cell_coords_to_visit.append((direction, i_adj, j_adj))
+
+            # If all adjacent cells have been visited draw current cell then exit while
+            # loop
+            if len(cell_coords_to_visit) == 0:
+                self._draw_cell(i, j)
+                return
+
+            # Pick random direction
+            next_cell_direction, next_cell_i, next_cell_j = random.choice(
+                cell_coords_to_visit
+            )
+
+            # Remove wall between current cell and chosen cell
+            match next_cell_direction:
+                case "right":
+                    self._cells[i][j].has_right_wall = False
+                    self._cells[next_cell_i][next_cell_j].has_left_wall = False
+                case "bottom":
+                    self._cells[i][j].has_bottom_wall = False
+                    self._cells[next_cell_i][next_cell_j].has_top_wall = False
+                case "left":
+                    self._cells[i][j].has_left_wall = False
+                    self._cells[next_cell_i][next_cell_j].has_right_wall = False
+                case "top":
+                    self._cells[i][j].has_top_wall = False
+                    self._cells[next_cell_i][next_cell_j].has_bottom_wall = False
+                case _:
+                    pass
+
+            # Move to cell by calling _break_walls_r
+            self._break_walls_r(next_cell_i, next_cell_j)
