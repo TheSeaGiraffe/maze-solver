@@ -31,6 +31,7 @@ class Maze:
 
         self._create_cells()
         self._break_walls_r(0, 0)
+        self._reset_cells_visited()
 
     def _create_cells(self):
         # Populate _cells list
@@ -121,3 +122,8 @@ class Maze:
 
             # Move to cell by calling _break_walls_r
             self._break_walls_r(next_cell_i, next_cell_j)
+
+    def _reset_cells_visited(self):
+        for row in range(self._num_rows):
+            for col in range(self._num_cols):
+                self._cells[row][col].visited = False
