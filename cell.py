@@ -39,19 +39,19 @@ class Cell:
         # Wonder if I can do all of this in a loop. Will think about it later
         if self._win is not None:
             line_left = Line(pt_lower_left, pt_upper_left)
-            line_left_color = "black" if self.has_left_wall else "white"
+            line_left_color = "black" if self.has_left_wall else "#d9d9d9"
             self._win.draw_line(line_left, line_left_color)
 
             line_right = Line(pt_lower_right, pt_upper_right)
-            line_right_color = "black" if self.has_right_wall else "white"
+            line_right_color = "black" if self.has_right_wall else "#d9d9d9"
             self._win.draw_line(line_right, line_right_color)
 
             line_top = Line(pt_upper_left, pt_upper_right)
-            line_top_color = "black" if self.has_top_wall else "white"
+            line_top_color = "black" if self.has_top_wall else "#d9d9d9"
             self._win.draw_line(line_top, line_top_color)
 
             line_bottom = Line(pt_lower_left, pt_lower_right)
-            line_bottom_color = "black" if self.has_bottom_wall else "white"
+            line_bottom_color = "black" if self.has_bottom_wall else "#d9d9d9"
             self._win.draw_line(line_bottom, line_bottom_color)
 
     def draw_move(self, to_cell: "Cell", undo: bool = False):

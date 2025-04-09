@@ -127,3 +127,77 @@ class Maze:
         for row in range(self._num_rows):
             for col in range(self._num_cols):
                 self._cells[row][col].visited = False
+
+    def _solve_r(self, i: int, j: int) -> bool:
+        # Call the animate method
+        self._animate()
+
+        # Mark current cell as visited
+        self._cells[i][j].visited = True
+
+        # If we're at the end cell then return True
+        if i == (self._num_rows - 1) and j == (self._num_cols - 1):
+            return True
+
+        # Check each direction and move towards the cell with no wall
+        # Check adjacent cells
+        adj_coords = [
+            ("right", i, j + 1),
+            ("bottom", i + 1, j),
+            ("left", i, j - 1),
+            ("top", i - 1, j),
+        ]
+
+        for direction, i_adj, j_adj in adj_coords:
+            if (
+                i_adj < 0
+                or j_adj < 0
+                or i_adj > (self._num_rows - 1)
+                or j_adj > (self._num_cols - 1)
+            ):
+                continue
+
+            if self._cells[i_adj][j_adj].visited:
+                continue
+
+            move = False
+            match direction:
+                case "right":
+                    if (
+                        not self._cells[i][j].has_right_wall
+                        and not self._cells[i_adj][j_adj].has_left_wall
+                    ):
+                        move = True
+                case "bottom":
+                    if (
+                        not self._cells[i][j].has_bottom_wall
+                        and not self._cells[i_adj][j_adj].has_top_wall
+                    ):
+                        move = True
+                case "left":
+                    if (
+                        not self._cells[i][j].has_left_wall
+                        and not self._cells[i_adj][j_adj].has_right_wall
+                    ):
+                        move = True
+                case "top":
+                    if (
+                        not self._cells[i][j].has_top_wall
+                        and not self._cells[i_adj][j_adj].has_bottom_wall
+                    ):
+                        move = True
+                case _:
+                    pass
+
+            if move:
+                self._cells[i][j].draw_move(self._cells[i_adj][j_adj])
+                if self._solve_r(i_adj, j_adj):
+                    return True
+                else:
+                    self._cells[i][j].draw_move(self._cells[i_adj][j_adj], True)
+
+        # If none of the directions worked out return False
+        return False
+
+    def solve(self) -> bool:
+        return self._solve_r(0, 0)
